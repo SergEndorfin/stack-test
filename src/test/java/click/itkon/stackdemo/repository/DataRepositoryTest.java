@@ -35,7 +35,7 @@ class DataRepositoryTest {
 
     @Test
     @Order(2)
-    void findLast_lastItem() {
+    void findLast_secondItem() {
         Optional<Data> last = dataRepository.findLast();
         assertTrue(last.isPresent());
         assertEquals(secondInStack, last.get().getValue());
@@ -44,10 +44,18 @@ class DataRepositoryTest {
 
     @Test
     @Order(3)
+    @Rollback(false)
     void findLast_firstItem() {
         dataRepository.delete(dataRepository.findLast().get());
         Data last = dataRepository.findLast().get();
         assertTrue(dataRepository.findLast().isPresent());
         assertEquals(firstInStack, last.getValue());
+    }
+
+    @Test
+    @Order(4)
+    void findLast_whenItemNotExists() {
+        dataRepository.delete(dataRepository.findLast().get());
+        assertFalse(dataRepository.findLast().isPresent());
     }
 }
