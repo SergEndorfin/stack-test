@@ -2,11 +2,14 @@ package click.itkon.stackdemo.service;
 
 import click.itkon.stackdemo.dto.DataDto;
 import click.itkon.stackdemo.entity.Data;
+import click.itkon.stackdemo.exception.StackEmptyException;
 import click.itkon.stackdemo.mapper.DataMapper;
 import click.itkon.stackdemo.repository.DataRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DataService {
@@ -15,15 +18,19 @@ public class DataService {
     private final DataRepository dataRepository;
 
     public DataDto push(DataDto dataDto) {
+        log.info("pushing data: {}", dataDto);
+
         return dataMapper.entityToDto(
                 dataRepository.save(
                         dataMapper.dtoToEntity(dataDto)));
     }
 
     public DataDto getLastAndRemove() {
+        log.info("getting last item and remove it");
+
         Data foundData = dataRepository
                 .findLast()
-                .orElseThrow(() -> new RuntimeException("Data not found"));
+                .orElseThrow(StackEmptyException::new);
         dataRepository.delete(foundData);
         return dataMapper.entityToDto(foundData);
     }

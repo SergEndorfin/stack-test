@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class DataDto {
 
     @NotEmpty(message = "Value can't be null or empty")
-    @Size(min = 2, max = 30, message = "The length of the Value  should be between 2 and 30")
+    @Size(min = 3, max = 30, message = "The length of the Value should be between 3 and 30")
     private String value;
 }
