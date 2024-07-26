@@ -17,12 +17,11 @@ public class StackController {
 
     @PostMapping("push")
     public ResponseEntity<DataDto> push(@RequestBody DataDto dataDto) {
-        return ResponseEntity.ok(DataDto.builder().key("asd").value("zxc").build());
+        return ResponseEntity.ok(dataService.push(dataDto));
     }
-
 
     @GetMapping("pop")
     public ResponseEntity<DataDto> pop() {
-        return ResponseEntity.ok(DataDto.builder().key("222").value("333").build());
+        return ResponseEntity.ok(dataService.getLastAndRemove());
     }
 }
