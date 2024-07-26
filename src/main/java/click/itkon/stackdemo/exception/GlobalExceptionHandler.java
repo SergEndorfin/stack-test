@@ -37,12 +37,13 @@ public class GlobalExceptionHandler {
         return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, webRequest, e.getMessage());
     }
 
+
     private ResponseEntity<ErrorResponseDto> getResponse(HttpStatus httpStatus, WebRequest webRequest, String message) {
         return ResponseEntity
                 .status(httpStatus)
                 .body(ErrorResponseDto.builder()
                         .apiPath(webRequest.getDescription(false).replaceFirst("uri=", ""))
-                        .errorCode(HttpStatus.NOT_FOUND)
+                        .errorCode(httpStatus)
                         .errorMessage(message)
                         .errorTime(LocalDateTime.now())
                         .build());

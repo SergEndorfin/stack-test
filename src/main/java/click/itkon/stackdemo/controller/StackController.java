@@ -1,9 +1,10 @@
 package click.itkon.stackdemo.controller;
 
 import click.itkon.stackdemo.dto.DataDto;
-import click.itkon.stackdemo.service.DataService;
+import click.itkon.stackdemo.service.DataServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StackController {
 
-    private final DataService dataService;
+    private final DataServiceImpl dataServiceImpl;
 
     @PostMapping("push")
     public ResponseEntity<DataDto> push(@Valid @RequestBody DataDto dataDto) {
-        return ResponseEntity.ok(dataService.push(dataDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dataServiceImpl.push(dataDto));
     }
 
     @GetMapping("pop")
     public ResponseEntity<DataDto> pop() {
-        return ResponseEntity.ok(dataService.getLastAndRemove());
+        return ResponseEntity.ok(dataServiceImpl.getLastAndRemove());
     }
 }
