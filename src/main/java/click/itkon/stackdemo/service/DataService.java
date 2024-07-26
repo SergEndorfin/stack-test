@@ -22,7 +22,7 @@ public class DataService {
 
     public DataDto getLastAndRemove() {
         Data foundData = dataRepository
-                .findLastEntity()
+                .findLast()
                 .orElseThrow(() -> new RuntimeException("Data not found"));
         dataRepository.delete(foundData);
         return dataMapper.entityToDto(foundData);

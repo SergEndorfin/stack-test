@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface DataRepository extends JpaRepository<Data, Long> {
 
     @Query(value = "SELECT * FROM data ORDER BY id DESC LIMIT 1", nativeQuery = true)
-    Optional<Data> findLastEntity();
+    Optional<Data> findLast();
 }
