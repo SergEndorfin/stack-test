@@ -83,7 +83,6 @@ mvn test
 
 ```json
 {
-  "id": 1,
   "value": "sample data"
 }
 ```
