@@ -22,9 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(StackController.class)
 class StackControllerTest {
 
-    public static final String PUSH_URL = "/push";
-    public static final String POP_URL = "/pop";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,7 +38,7 @@ class StackControllerTest {
 
         when(dataServiceMock.push(any(DataDto.class))).thenReturn(dataDto);
 
-        mockMvc.perform(post(PUSH_URL)
+        mockMvc.perform(post(StackController.PUSH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dataDto)))
                 .andExpect(status().isCreated())
@@ -55,11 +52,11 @@ class StackControllerTest {
         String data = "da";
         DataDto dataDto = DataDto.builder().value(data).build();
 
-        mockMvc.perform(post(PUSH_URL)
+        mockMvc.perform(post(StackController.PUSH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dataDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.apiPath").value(PUSH_URL))
+                .andExpect(jsonPath("$.apiPath").value(StackController.PUSH_URL))
                 .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.errorMessage").value("{value=The length of the Value should be between 3 and 30}"))
                 .andExpect(jsonPath("$.errorTime").exists());
@@ -69,11 +66,11 @@ class StackControllerTest {
     void whenPushInvalidRequestNullValue_thenReturnBadRequestError() throws Exception {
         DataDto dataDto = DataDto.builder().build();
 
-        mockMvc.perform(post(PUSH_URL)
+        mockMvc.perform(post(StackController.PUSH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dataDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.apiPath").value(PUSH_URL))
+                .andExpect(jsonPath("$.apiPath").value(StackController.PUSH_URL))
                 .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.errorMessage").value("{value=Value can't be null or empty}"))
                 .andExpect(jsonPath("$.errorTime").exists());
@@ -85,7 +82,7 @@ class StackControllerTest {
         DataDto dataDto = DataDto.builder().value(data).build();
         when(dataServiceMock.getLastAndRemove()).thenReturn(dataDto);
 
-        mockMvc.perform(get(POP_URL)
+        mockMvc.perform(get(StackController.POP_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.value").value(data));
@@ -95,10 +92,10 @@ class StackControllerTest {
     void whenPopAndStackEmpty_thenReturnStackEmptyError() throws Exception {
         when(dataServiceMock.getLastAndRemove()).thenThrow(new StackEmptyException());
 
-        mockMvc.perform(get(POP_URL)
+        mockMvc.perform(get(StackController.POP_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.apiPath").value(POP_URL))
+                .andExpect(jsonPath("$.apiPath").value(StackController.POP_URL))
                 .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.errorMessage").value(StackEmptyException.ERROR_MESSAGE))
                 .andExpect(jsonPath("$.errorTime").exists());

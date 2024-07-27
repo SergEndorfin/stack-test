@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StackController {
 
+    public static final String PUSH_URL = "/push";
+    public static final String POP_URL = "/pop";
+
     private final DataServiceImpl dataServiceImpl;
 
     @Operation(
@@ -74,7 +77,7 @@ public class StackController {
                                              }
                                             """)))
     })
-    @PostMapping("push")
+    @PostMapping(PUSH_URL)
     public ResponseEntity<DataDto> push(@Valid @RequestBody DataDto dataDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(dataServiceImpl.push(dataDto));
     }
@@ -123,7 +126,7 @@ public class StackController {
                                              }
                                             """)))
     })
-    @GetMapping("pop")
+    @GetMapping(POP_URL)
     public ResponseEntity<DataDto> pop() {
         return ResponseEntity.ok(dataServiceImpl.getLastAndRemove());
     }

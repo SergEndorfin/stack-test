@@ -10,9 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static click.itkon.stackdemo.repository.DataRepositoryActions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -29,33 +27,35 @@ class DataRepositoryTest {
     @Order(1)
     @Rollback(false)
     void save_2_items() {
-        assertNotNull(dataRepository.save(Data.builder().value(firstInStack).build()));
-        assertNotNull(dataRepository.save(Data.builder().value(secondInStack).build()));
+        pushAndCheckIfAdded(new Data(firstInStack))
+                .andThen(pushAndCheckIfAdded(new Data(secondInStack)))
+                .accept(dataRepository);
     }
 
     @Test
     @Order(2)
     void findLast_secondItem() {
-        Optional<Data> last = dataRepository.findLast();
-        assertTrue(last.isPresent());
-        assertEquals(secondInStack, last.get().getValue());
-        assertEquals(2, dataRepository.count());
+        getLastAddedItemAndCheckValue(secondInStack)
+                .andThen(checkIfTotalNumberOfItemsIs(2))
+                .accept(dataRepository);
     }
 
     @Test
     @Order(3)
     @Rollback(false)
     void findLast_firstItem() {
-        dataRepository.delete(dataRepository.findLast().get());
-        Data last = dataRepository.findLast().get();
-        assertTrue(dataRepository.findLast().isPresent());
-        assertEquals(firstInStack, last.getValue());
+        removeLastAddedItem()
+                .andThen(checkIfTotalNumberOfItemsIs(1))
+                .andThen(getLastAddedItemAndCheckValue(firstInStack))
+                .accept(dataRepository);
     }
 
     @Test
     @Order(4)
     void findLast_whenItemNotExists() {
-        dataRepository.delete(dataRepository.findLast().get());
-        assertFalse(dataRepository.findLast().isPresent());
+        removeLastAddedItem()
+                .andThen(checkIfTotalNumberOfItemsIs(0))
+                .andThen(checkIfItemNotExists())
+                .accept(dataRepository);
     }
 }

@@ -19,4 +19,8 @@ public class Data {
 
     @Column(name = "`value`", nullable = false)
     private String value;
+
+    public Data(String value) {
+        this.value = value;
+    }
 }
