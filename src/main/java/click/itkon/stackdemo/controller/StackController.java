@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(
-        name = "Stack Spring Boot REST API",
+        name = "Stack REST API",
         description = "Stack Spring Boot API with H2 embedded DB"
 )
 @RestController
