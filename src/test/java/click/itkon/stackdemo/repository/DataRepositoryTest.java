@@ -1,10 +1,7 @@
 package click.itkon.stackdemo.repository;
 
 import click.itkon.stackdemo.entity.Data;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,6 +20,13 @@ class DataRepositoryTest {
     private final String firstInStack = "111";
     private final String secondInStack = "222";
 
+    private static int remainingItemsInStack;
+
+    @BeforeAll
+    static void beforeAll() {
+        remainingItemsInStack = 2;
+    }
+
     @Test
     @Order(1)
     @Rollback(false)
@@ -36,7 +40,7 @@ class DataRepositoryTest {
     @Order(2)
     void findLast_secondItem() {
         getLastAddedItemAndCheckValue(secondInStack)
-                .andThen(checkIfTotalNumberOfItemsIs(2))
+                .andThen(checkIfTotalNumberOfItemsIs(remainingItemsInStack--))
                 .accept(dataRepository);
     }
 
@@ -45,7 +49,7 @@ class DataRepositoryTest {
     @Rollback(false)
     void findLast_firstItem() {
         removeLastAddedItem()
-                .andThen(checkIfTotalNumberOfItemsIs(1))
+                .andThen(checkIfTotalNumberOfItemsIs(remainingItemsInStack--))
                 .andThen(getLastAddedItemAndCheckValue(firstInStack))
                 .accept(dataRepository);
     }
@@ -54,7 +58,7 @@ class DataRepositoryTest {
     @Order(4)
     void findLast_whenItemNotExists() {
         removeLastAddedItem()
-                .andThen(checkIfTotalNumberOfItemsIs(0))
+                .andThen(checkIfTotalNumberOfItemsIs(remainingItemsInStack))
                 .andThen(checkIfItemNotExists())
                 .accept(dataRepository);
     }
