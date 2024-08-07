@@ -82,4 +82,17 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>stack-app-virtual-snapshots</id>
+            <name>dd4d573a5df2-snapshots</name>
+            <url>http://3.70.155.96:8081/artifactory/stack-app-local-snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>stack-app-virtual-release</id>
+            <name>dd4d573a5df2-releases</name>
+            <url>http://3.70.155.96:8081/artifactory/stack-app-local-release</url>
+        </repository>
+    </distributionManagement>
+
 </project>
