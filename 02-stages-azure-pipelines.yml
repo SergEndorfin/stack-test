@@ -18,17 +18,17 @@ stages:
       - job: Job_2
         steps:
           - bash: echo stage_BUILD---Job_2
-  - stage: dev-deploy
+  - stage: dev_deploy
     jobs: 
       - job: Job_1
         steps:
           - bash: echo stage_DEV_DEPLOY---Job_1
-  - stage: qa-deploy
+  - stage: qa_deploy
     jobs: 
       - job: Job_1
         steps:
           - bash: echo stage_QA_DEPLOY---Job_1
-  - stage: prod-deploy
+  - stage: prod_deploy
     jobs: 
       - job: Job_1
         steps:
