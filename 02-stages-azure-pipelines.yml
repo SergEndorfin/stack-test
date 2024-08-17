@@ -1,4 +1,4 @@
-# Starter pipeline
+ # Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -19,16 +19,21 @@ stages:
         steps:
           - bash: echo stage_BUILD---Job_2
   - stage: dev_deploy
+    dependsOn: build
     jobs: 
       - job: Job_1
         steps:
           - bash: echo stage_DEV_DEPLOY---Job_1
   - stage: qa_deploy
+    dependsOn: build
     jobs: 
       - job: Job_1
         steps:
           - bash: echo stage_QA_DEPLOY---Job_1
   - stage: prod_deploy
+    dependsOn: 
+      - dev_deploy
+      - qa_deploy
     jobs: 
       - job: Job_1
         steps:
