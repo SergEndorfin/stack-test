@@ -27,6 +27,12 @@ jobs:
     steps:
       - script: echo == JOB -22-!
   - job: Job_3
-    dependsOn: Job_2
+    dependsOn: Job_1
+    steps:
+      - script: echo == JOB -333-!
+  - job: Job_4
+    dependsOn: 
+      - Job_2
+      - Job_3
     steps:
       - script: echo == JOB -333-!
