@@ -1,0 +1,72 @@
+ # Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: build
+    jobs: 
+      - job: Job_1
+        steps:
+          - bash: echo stage_BUILD---Job_1
+          - bash: echo $(PipelineLevelVariable)
+          - bash: echo $(Build.BuildNumber)
+          - bash: echo $(Build.BuildId)
+          - bash: echo $(Build.SourceBranchName)
+          - bash: echo $(Build.SourcesDirectory)
+          - bash: echo $(System.DefaultWorkingDirectory)
+          - bash: ls -R $(System.DefaultWorkingDirectory)
+          - bash: echo $(Build.ArtifactStagingDirectory)
+          - bash: java -version
+          - bash: node --version
+          - bash: python --version
+          - bash: mvn -version
+          - bash: • ls -R $(Build.ArtifactStagingDirectory)
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)'
+              Contents: |
+                **/*.yaml
+                **/*.tf
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          - bash: • ls -R $(Build.ArtifactStagingDirectory)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+#      - job: Job_2
+#        steps:
+#          - bash: echo stage_BUILD---Job_2
+#  - stage: dev_deploy
+#    variables:
+#      environment: DEV
+#    dependsOn: build
+#    jobs: 
+#      - job: Job_1
+#        steps:
+#          - bash: echo stage_$(environment)_DEPLOY---Job_1
+#  - stage: qa_deploy
+#    variables:
+#      environment: QA
+#   dependsOn: build
+#    jobs: 
+#      - job: Job_1
+#        steps:
+#          - bash: echo stage_$(environment)_DEPLOY---Job_1
+#  - stage: prod_deploy
+#    variables:
+#      environment: PROD
+#    dependsOn: 
+#      - dev_deploy
+#      - qa_deploy
+#    jobs: 
+#      - job: Job_1
+#        steps:
+#          - bash: echo stage_$(environment)_DEPLOY---Job_1
