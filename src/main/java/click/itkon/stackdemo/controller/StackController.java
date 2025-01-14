@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Tag(
         name = "Stack REST API",
         description = "Stack Spring Boot API with H2 embedded DB"
@@ -30,6 +33,7 @@ public class StackController {
 
     public static final String PUSH_URL = "/push";
     public static final String POP_URL = "/pop";
+    public static final String GET_LOCALHOST_IP = "/ip";
 
     private final DataServiceImpl dataServiceImpl;
 
@@ -129,5 +133,11 @@ public class StackController {
     @GetMapping(POP_URL)
     public ResponseEntity<DataDto> pop() {
         return ResponseEntity.ok(dataServiceImpl.getLastAndRemove());
+    }
+
+
+    @GetMapping(GET_LOCALHOST_IP)
+    public ResponseEntity<String> getIp() throws UnknownHostException {
+        return ResponseEntity.ok(InetAddress.getLocalHost().getHostAddress());
     }
 }
